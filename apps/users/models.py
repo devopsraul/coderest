@@ -5,17 +5,20 @@ from simple_history.models import HistoricalRecords
 # Create your models here.
 class UserManager(BaseUserManager):
     def _create_user(self, username, email, name, last_name, password, is_staff, is_superuser, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
         user = self.model(
-            username = username,
-            email = email,
-            name = name,
-            last_name = last_name,
-            is_staff = is_staff,
-            is_superuser = is_superuser,
+            username=username,
+            email=email,
+            name=name,
+            last_name=last_name,
+            is_staff=is_staff,
+            is_superuser=is_superuser,
             **extra_fields
         )
         user.set_password(password)
-        user.save(using=self.db)
+        user.save(using=self._db)
         return user
     
     def create_user(self, username, email, name, last_name, password=None, **extra_fields):
@@ -33,9 +36,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default = True)
     is_staff = models.BooleanField(default = False)
     historial = HistoricalRecords()
+    
     objects = UserManager()
 
-    class meta:
+    class Meta:
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
         
