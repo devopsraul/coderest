@@ -15,17 +15,6 @@ def user_api_view(request):
         users = User.objects.all()
         users_serializer = UserSerializer(users, many=True)
         
-        test_data = {
-            'name': 'develop',
-            'email': 'develop@gmail.com'
-        }
-        
-        test_user = TestUserSerealizer(data = test_data, context = test_data)
-        if test_user.is_valid():
-            print("paso validacion")
-        else:
-            print(test_user.errors)
-        
         return Response(users_serializer.data, status = status.HTTP_200_OK)
 
     elif request.method == 'POST':
@@ -49,7 +38,7 @@ def user_detail_api_view(request, pk = None):
             return Response(user_serializer.data, status = status.HTTP_200_OK)
         #update
         elif request.method == 'PUT':
-            user_serializer = UserSerializer(user, data = request.data)        
+            user_serializer = TestUserSerealizer(user, data = request.data, context = request.data)        
             if user_serializer.is_valid():
                 user_serializer.save()
                 return Response(user_serializer.data, status = status.HTTP_200_OK) 

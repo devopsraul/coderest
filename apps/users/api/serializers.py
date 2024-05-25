@@ -11,7 +11,7 @@ class TestUserSerealizer(serializers.Serializer):
     email = serializers.EmailField()
 
     def validate_name(self, value):
-        if 'develop' in value:
+        if 'developer' in value:
             raise serializers.ValidationError('Error, no puede existir un usuario con ese nombre')
         print(value)
         return value
@@ -27,4 +27,15 @@ class TestUserSerealizer(serializers.Serializer):
         return value
     
     def validate(self, data):
-        return data
+        return data 
+    
+    def create(self, validated_data):
+        return User.objects.create (**validated_data)
+    
+    def update(self, instance, validate_data):
+        #codigo interno que hace el serializers, por cada valors del modelo
+        instance.name = validate_data.get('name', instance.name)
+        instance.email = validate_data.get('email', instance.email)
+        instance.save()
+        print(instance)
+        return instance
