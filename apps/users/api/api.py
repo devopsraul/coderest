@@ -9,7 +9,9 @@ from apps.users.api.serializers import TestUserSerealizer, UserSerializer
 @api_view(['GET', 'POST'])
 def user_api_view(request):
     
+    #lista
     if request.method == 'GET':
+        #queryset
         users = User.objects.all()
         users_serializer = UserSerializer(users, many=True)
         
@@ -18,9 +20,11 @@ def user_api_view(request):
             'email': 'develop@gmail.com'
         }
         
-        test_user = TestUserSerealizer(data = test_data)
+        test_user = TestUserSerealizer(data = test_data, context = test_data)
         if test_user.is_valid():
             print("paso validacion")
+        else:
+            print(test_user.errors)
         
         return Response(users_serializer.data, status = status.HTTP_200_OK)
 
@@ -33,6 +37,7 @@ def user_api_view(request):
             return Response(user_serializer.data, status = status.HTTP_201_CREATED)  # Status code 201 for created
         return Response(user_serializer.errors, status = status.HTTP_400_BAD_REQUEST)  # Status code 400 for bad request
 
+#create
 @api_view(['GET', 'PUT', 'DELETE'])
 def user_detail_api_view(request, pk = None):    
     user = User.objects.filter(id = pk).first()
