@@ -50,11 +50,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return (self.username)
     
     def __str__(self):
-        """Visualizacion por defecto de un modelo
-        
+        """Visualizacion por defecto de un modelo        
         retorne un formato de visualizacion por defecto de una instancia de un modelos, en este 
         caso del modelo usuario, este formato sera visible cuando se desee visualizar tanto en
-        navegador, consola, o en cualquier lugar que sea llamado
-        
+        navegador, consola, o en cualquier lugar que sea llamado      
         """ 
         return f'{self.name} {self.last_name}' 
+    
+    def save(self, *args, **kwargs):
+        print(self)
